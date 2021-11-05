@@ -1,0 +1,56 @@
+version: "3.4"
+
+services:
+    nginx:
+        image: "nginx:latest"
+        ports:
+            - 80:80
+        volumes:
+            - .:/var/www:rw,delegated
+            - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf:ro
+        depends_on:
+            - php
+        tty: true
+        extra_hosts:
+            - "__DATABASE_URL__:172.10.101.12"
+        networks:
+            internal:
+                ipv4_address: 172.10.101.10
+
+    php:
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www:rw,delegated
+            - /var/www/var/cache
+            - /var/www/var/log
+        depends_on:
+            - mysql
+        tty: true
+        extra_hosts:
+            - "__DATABASE_URL__:172.10.101.12"
+        networks:
+            internal:
+                ipv4_address: 172.10.101.11
+
+    mysql:
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - 3306:3306
+        command: "--default-authentication-plugin=mysql_native_password"
+        tty: true
+        extra_hosts:
+            - "__DATABASE_URL__:127.0.0.1"
+        networks:
+            internal:
+                ipv4_address: 172.10.101.12
+
+networks:
+    internal:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.10.101.0/24
