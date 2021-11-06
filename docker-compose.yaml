@@ -4,7 +4,7 @@ services:
     nginx:
         image: "nginx:latest"
         ports:
-            - 80:80
+            - "80:80"
         volumes:
             - .:/var/www:rw,delegated
             - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf:ro
@@ -39,7 +39,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
         ports:
-            - 3306:3306
+            - "3306:3306"
         command: "--default-authentication-plugin=mysql_native_password"
         tty: true
         extra_hosts:

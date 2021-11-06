@@ -1,0 +1,34 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+            customer:
+                url: '%env(resolve:DATABASE_URL)%'
+                wrapper_class: App\DBAL\DatabaseConnectionWrapper
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            auto_mapping: true
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    Main:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Main'
+                        prefix: 'App\Entity\Main'
+                        alias: Main
+            customer:
+                connection: customer
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    Customer:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Customer'
+                        prefix: 'App\Entity\Customer'
+                        alias: Customer

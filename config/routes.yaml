@@ -1,3 +1,7 @@
 index:
     path: /
     controller: App\Controller\IndexController::index
+
+employess:
+    path: /employees
+    controller: App\Controller\EmployeesController::index
